@@ -1,14 +1,44 @@
-const jsonServer = require("json-server");
-const server = jsonServer.create();
-const router = jsonServer.router("db.json");
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+require("dotenv").config();
+const watchlist = require("./StockWatchList");
 
-const middlewares = jsonServer.defaults();
-
-server.use(middlewares);
-server.use(router);
+const app = express();
+app.use(cors());
+app.use(express.json());
 
 const port = process.env.PORT || 3001;
 
-server.listen(port, () => {
-  console.log(`JSON Server is running on port ${port}`);
+const dbURI = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_DATABASE}.mongodb.net/${process.env.DB_COLLECTION}?retryWrites=true&w=majority`;
+
+mongoose
+  .connect(dbURI, { useNewURLParser: true, useUnifiedTopology: true })
+  .then(
+    app.listen(port, () => {
+      console.log("Yay, your server is running on port " + port);
+    })
+  )
+  .catch((err) => console.log(err));
+
+app.get("/getWatchlist", (req, res) => {
+  watchlist
+    .find()
+    .then((result) => res.send(result))
+    .catch((err) => console.log(err));
+});
+
+app.post("/deleteStock", (req, res) => {
+  watchlist
+    .deleteOne({ _id: mongoose.Types.ObjectId(req.body.id) })
+    .then((result) => res.send(result))
+    .catch((err) => console.log(err));
+});
+
+app.post("/addStock", (req, res) => {
+  const newStock = new watchlist({ Stock: req.body.Stock });
+  newStock
+    .save()
+    .then((result) => res.send(result))
+    .catch((err) => console.log(err));
 });
