@@ -8,6 +8,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
+
 const port = process.env.PORT || 3001;
 
 const dbURI = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_DATABASE}.mongodb.net/${process.env.DB_COLLECTION}?retryWrites=true&w=majority`;
@@ -20,10 +24,6 @@ mongoose
     })
   )
   .catch((err) => console.log(err));
-
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
-});
 
 app.get("/getWatchlist", (req, res) => {
   watchlist
