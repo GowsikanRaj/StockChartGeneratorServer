@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
 
 const port = process.env.PORT || 3001;
 
-const dbURI = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_DATABASE}.mongodb.net/${process.env.DB_COLLECTION}?retryWrites=true&w=majority`;
+const dbURI = process.env.MONGO_URI;
 
 mongoose
   .connect(dbURI, { useNewURLParser: true, useUnifiedTopology: true })
