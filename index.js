@@ -19,7 +19,7 @@ mongoose
   )
   .catch((err) => console.log(err));
 
-app.get("/getWatchlist", (req, res) => {
+app.get("/", (req, res) => {
   watchlist
     .find()
     .then((result) => res.send(result))
