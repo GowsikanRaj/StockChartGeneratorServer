@@ -23,6 +23,10 @@ mongoose
   )
   .catch((err) => console.log(err));
 
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
+
 app.get("/getWatchlist", (req, res) => {
   watchlist
     .find()
