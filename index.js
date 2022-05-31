@@ -5,14 +5,13 @@ require("dotenv").config();
 const watchlist = require("./StockWatchList");
 
 const app = express();
-app.use(cors);
-app.use(express.json());
 
-app.use(express.static(path.join(__dirname, "build")));
+app.use(cors());
+app.use(express.json());
 
 const port = process.env.PORT || 3001;
 
-const dbURI = process.env.MONGO_URI;
+const dbURI = process.env.DB_MONGO_URI;
 
 mongoose
   .connect(dbURI, { useNewURLParser: true, useUnifiedTopology: true })
@@ -23,11 +22,8 @@ mongoose
   )
   .catch((err) => console.log(err));
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
-});
-
 app.get("/getWatchlist", (req, res) => {
+  console.log("Hello");
   watchlist
     .find()
     .then((result) => res.send(result))
